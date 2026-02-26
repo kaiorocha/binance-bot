@@ -31,3 +31,25 @@ RSI_OVERBOUGHT: float = _float_env("RSI_OVERBOUGHT", 70.0)
 TRADE_QUANTITY: float = _float_env("TRADE_QUANTITY", 0.001)
 
 USE_TESTNET: bool = _bool_env("USE_TESTNET", False)
+
+# ── Risk management ──────────────────────────────────────────────────────────
+
+# Slow EMA period used as a trend filter: signals that trade against the trend
+# are suppressed to HOLD, reducing whipsaw losses.
+EMA_SLOW: int = _int_env("EMA_SLOW", 21)
+
+# ATR (Average True Range) period for measuring recent volatility.
+ATR_PERIOD: int = _int_env("ATR_PERIOD", 14)
+
+# Stop-loss distance = ATR_MULTIPLIER × ATR.
+# Take-profit distance = ATR_MULTIPLIER × ATR × 2 (2 : 1 reward / risk).
+ATR_MULTIPLIER: float = _float_env("ATR_MULTIPLIER", 2.0)
+
+# Fallback stop-loss / take-profit as a fraction of entry price, used when
+# ATR is unavailable (e.g. insufficient historical data on first startup).
+STOP_LOSS_PCT: float = _float_env("STOP_LOSS_PCT", 0.02)   # 2 %
+TAKE_PROFIT_PCT: float = _float_env("TAKE_PROFIT_PCT", 0.04)  # 4 %
+
+# Circuit-breaker: pause the bot for the remainder of the UTC day once
+# realised losses exceed this amount (in the quote asset, e.g. USDT).
+MAX_DAILY_LOSS_USDT: float = _float_env("MAX_DAILY_LOSS_USDT", 50.0)
